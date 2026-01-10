@@ -1,0 +1,135 @@
+digraph DreamTrip_Architecture {
+    rankdir=TB;
+    node [shape=box, style=rounded, fontname="Arial"];
+    edge [fontname="Arial", fontsize=9];
+
+    // Coordinator
+    coordinator [label="Coordinator\n(Orchestrator)\n\norchestrate_trip_planning()\nhttpx.AsyncClient\nClientFactory\n\nFunctions:\n• _send_message()\n• Orchestrates travel workflow", shape=box, style="rounded,filled", fillcolor="#E3F2FD", fontsize=10, width=2.5];
+
+    // Data Source
+    csv [label="Travel CSV\nFile\n\ntravel_options.csv\n\nColumns:\n• City\n• Type\n• Name\n• Cost\n• Rating\n• Duration\n• Description", shape=note, style="filled", fillcolor="#FFF9C4"];
+
+    // FastAPI Server Layer
+    concierge_server [label="FastAPI Server\nPort 8001\n\nUvicorn\nA2AFastAPIApplication\n\nEndpoint: /a2a\n(JSON-RPC)", shape=box, style="rounded,filled", fillcolor="#A5D6A7", width=2.0];
+    committee_server [label="FastAPI Server\nPort 8002\n\nUvicorn\nA2AFastAPIApplication\n\nEndpoint: /a2a\n(JSON-RPC)", shape=box, style="rounded,filled", fillcolor="#90CAF9", width=2.0];
+    artist_server [label="FastAPI Server\nPort 8003\n\nUvicorn\nA2AFastAPIApplication\n\nEndpoint: /a2a\n(JSON-RPC)", shape=box, style="rounded,filled", fillcolor="#F48FB1", width=2.0];
+
+    // Request Handlers
+    concierge_handler [label="ReaderRequestHandler\n(SimpleRequestHandler)\n\n• on_message_send()\n• Input validation\n• asyncio.to_thread()\n• Error handling\n\nValidates:\n• dataset_path\n• csv_text\n• records", shape=box, style="rounded,filled", fillcolor="#C8E6C9", width=2.2];
+
+    committee_handler [label="AnalystRequestHandler\n(SimpleRequestHandler)\n\n• on_message_send()\n• Input validation\n• asyncio.to_thread()\n• Error handling\n\nValidates:\n• travel_options (list)\n• concierge_summary\n• metrics (optional)", shape=box, style="rounded,filled", fillcolor="#BBDEFB", width=2.2];
+
+    artist_handler [label="VisualizerRequestHandler\n(SimpleRequestHandler)\n\n• on_message_send()\n• Input validation\n• asyncio.to_thread()\n• Error handling\n\nValidates:\n• travel_options (list)\n• final_itinerary\n• artifacts_dir", shape=box, style="rounded,filled", fillcolor="#F8BBD0", width=2.2];
+
+    // Agent Implementations
+    concierge_impl [label="Travel Concierge\nImplementation\n\nrun_langchain_reader()\n• CSVLoader\n• ChatOpenAI (gpt-4o-mini)\n• Calculate avg_costs\n• Find cheapest options\n• Generate summary\n\nReturns:\n• summary\n• avg_costs\n• cheapest_options\n• types_breakdown\n• cities_available", shape=box, style="rounded,filled", fillcolor="#C8E6C9", width=2.2];
+
+    // DUAL-AGENT DEBATE ARCHITECTURE (CREWAI)
+    // This is the unique part - show two agents inside!
+    budget_watchdog [label="Budget Watchdog\nAgent 💰\n\nRole: Frugal Accountant\nGoal: Minimize costs\n\nArgues for:\n• Budget flights\n• Cheap hotels\n• Free activities\n\nBackstory:\n'Strict accountant who\nhates wasting money'", shape=box, style="rounded,filled", fillcolor="#E1F5FE", width=1.8, fontsize=9];
+
+    experience_guru [label="Experience Guru\nAgent ✨\n\nRole: Luxury Influencer\nGoal: Maximize experiences\n\nArgues for:\n• Direct flights\n• Nice hotels\n• Premium tours\n\nBackstory:\n'Life is short,\nexperiences matter'", shape=box, style="rounded,filled", fillcolor="#B3E5FC", width=1.8, fontsize=9];
+
+    committee_impl [label="Planning Committee\nImplementation\n\nrun_crewai_analysis()\n━━━━━━━━━━━━━━━━━━\nDUAL AGENT DEBATE\n━━━━━━━━━━━━━━━━━━\n\n• Crew with 2 agents\n• Sequential process\n• Negotiate & debate\n• Reach consensus\n\nReturns:\n• itinerary (markdown)\n• itinerary_json\n• task_outputs", shape=box, style="rounded,filled", fillcolor="#BBDEFB", width=2.4, height=1.5];
+
+    artist_impl [label="Itinerary Artist\nImplementation\n\nrun_autogen_visualizer()\n• AssistantAgent\n• OpenAI Client (gpt-4o)\n• render_travel_chart() tool\n• Plotly cost charts\n\nReturns:\n• caption\n• tool_outputs\n• artifacts_directory", shape=box, style="rounded,filled", fillcolor="#F8BBD0", width=2.2];
+
+    // Agent Cards
+    concierge_card [label="AgentCard\n\nname: Travel Concierge\nskill_id: travel_csv_ingest\nskill_name: Travel Options Search\n\nCapabilities:\n• streaming: false\n• push_notifications: false\n• transport: jsonrpc\n• output_modes: text/plain, application/json", shape=note, style="filled", fillcolor="#E8F5E9", fontsize=8];
+    
+    committee_card [label="AgentCard\n\nname: Planning Committee\nskill_id: trip_planning_committee\nskill_name: Trip Negotiation\n\n━━━━━━━━━━━━━━━━━━━━━━━\nDUAL AGENT ARCHITECTURE\n━━━━━━━━━━━━━━━━━━━━━━━\n• Budget Watchdog (frugal)\n• Experience Guru (luxury)\n• Debate & Negotiate\n• Consensus-based\n━━━━━━━━━━━━━━━━━━━━━━━\n\nCapabilities:\n• streaming: false\n• transport: jsonrpc", shape=note, style="filled", fillcolor="#E3F2FD", fontsize=8];
+    
+    artist_card [label="AgentCard\n\nname: Itinerary Artist\nskill_id: travel_visual_story\nskill_name: Itinerary Visualization\n\nCapabilities:\n• streaming: false\n• push_notifications: false\n• transport: jsonrpc\n• output_modes: text/plain, application/json", shape=note, style="filled", fillcolor="#FCE4EC", fontsize=8];
+
+    // Artifacts
+    artifacts [label="Artifacts Directory\nartifacts/autogen/\n\n• cost_by_name.json\n• cost_by_type.json\n(Plotly charts)", shape=folder, style="filled", fillcolor="#FFE0B2"];
+
+    // Data flow
+    csv -> coordinator [label="pd.read_csv()"];
+    
+    // Coordinator to Servers (HTTP/JSON-RPC)
+    coordinator -> concierge_server [label="HTTP POST /a2a\nA2A Message\n{csv_text, dataset_path, model}\n'Find options for Paris, Tokyo, NYC'", style="solid", color="#4CAF50", penwidth=2];
+    coordinator -> committee_server [label="HTTP POST /a2a\nA2A Message\n{travel_options, concierge_summary}\n'Debate and finalize itinerary'", style="solid", color="#2196F3", penwidth=2];
+    coordinator -> artist_server [label="HTTP POST /a2a\nA2A Message\n{travel_options, final_itinerary}\n'Visualize costs and budget'", style="solid", color="#E91E63", penwidth=2];
+
+    // Server to Handler
+    concierge_server -> concierge_handler [label="RequestHandler\non_message_send()", style="dashed", color="#66BB6A"];
+    committee_server -> committee_handler [label="RequestHandler\non_message_send()", style="dashed", color="#42A5F5"];
+    artist_server -> artist_handler [label="RequestHandler\non_message_send()", style="dashed", color="#EC407A"];
+
+    // Handler to Implementation
+    concierge_handler -> concierge_impl [label="asyncio.to_thread()\nrun_langchain_reader()", style="dotted", color="#66BB6A"];
+    committee_handler -> committee_impl [label="asyncio.to_thread()\nrun_crewai_analysis()\n(Budget vs Experience)", style="dotted", color="#42A5F5"];
+    artist_handler -> artist_impl [label="asyncio.to_thread()\nrun_autogen_visualizer()", style="dotted", color="#EC407A"];
+
+    // DUAL AGENT CONNECTIONS (show debate architecture)
+    budget_watchdog -> committee_impl [label="Advocate\nfor budget", style="dashed", color="#0277BD", dir="both"];
+    experience_guru -> committee_impl [label="Advocate\nfor luxury", style="dashed", color="#01579B", dir="both"];
+    budget_watchdog -> experience_guru [label="DEBATE &\nNEGOTIATE", style="bold", color="#D32F2F", penwidth=2, dir="both"];
+
+    // Responses back
+    concierge_impl -> concierge_handler [label="Message response", style="dotted", color="#66BB6A"];
+    committee_impl -> committee_handler [label="Message response\n(Consensus itinerary)", style="dotted", color="#42A5F5"];
+    artist_impl -> artist_handler [label="Message response", style="dotted", color="#EC407A"];
+
+    concierge_handler -> concierge_server [label="A2A Response\n{summary, avg_costs, options}", style="dashed", color="#388E3C"];
+    committee_handler -> committee_server [label="A2A Response\n{itinerary, itinerary_json}", style="dashed", color="#1976D2"];
+    artist_handler -> artist_server [label="A2A Response\n{caption, tool_outputs}", style="dashed", color="#C2185B"];
+
+    concierge_server -> coordinator [label="HTTP Response\nA2A Message", style="solid", color="#388E3C", penwidth=2];
+    committee_server -> coordinator [label="HTTP Response\nA2A Message", style="solid", color="#1976D2", penwidth=2];
+    artist_server -> coordinator [label="HTTP Response\nA2A Message", style="solid", color="#C2185B", penwidth=2];
+
+    artist_impl -> artifacts [label="write charts\n(JSON)", color="#FF9800"];
+
+    // Agent Cards
+    concierge_server -> concierge_card [style="invis"];
+    committee_server -> committee_card [style="invis"];
+    artist_server -> artist_card [style="invis"];
+
+    // Grouping
+    subgraph cluster_concierge {
+        label="Travel Concierge Agent (Port 8001)";
+        style=dashed;
+        color="#4CAF50";
+        concierge_server; concierge_handler; concierge_impl; concierge_card;
+    }
+
+    subgraph cluster_committee {
+        label="Planning Committee Agent (Port 8002)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nDUAL-AGENT DEBATE ARCHITECTURE (CrewAI)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
+        style=dashed;
+        color="#2196F3";
+        penwidth=3;
+        committee_server; committee_handler; committee_impl; committee_card;
+        
+        // Sub-cluster for the debate agents
+        subgraph cluster_debate_agents {
+            label="Debate Agents";
+            style=filled;
+            fillcolor="#E1F5FE";
+            color="#0277BD";
+            penwidth=2;
+            budget_watchdog; experience_guru;
+        }
+    }
+
+    subgraph cluster_artist {
+        label="Itinerary Artist Agent (Port 8003)";
+        style=dashed;
+        color="#E91E63";
+        artist_server; artist_handler; artist_impl; artist_card;
+    }
+
+    // Legend
+    subgraph cluster_legend {
+        label="Legend";
+        style=filled;
+        fillcolor="#FAFAFA";
+        rankdir=LR;
+        
+        legend_http [label="HTTP/JSON-RPC\n(Thick solid)", shape=note, style="filled", fillcolor="#E8EAF6"];
+        legend_handler [label="Handler Call\n(Dashed)", shape=note, style="filled", fillcolor="#F3E5F5"];
+        legend_async [label="Async Bridge\n(Dotted)", shape=note, style="filled", fillcolor="#FFF9C4"];
+        legend_debate [label="Debate/Negotiate\n(Bold red)", shape=note, style="filled", fillcolor="#FFEBEE"];
+    }
+}
