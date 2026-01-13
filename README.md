@@ -1,3 +1,12 @@
+---
+title: DreamTrip Architect
+emoji: ✈️
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
+
 # ✈️ DreamTrip Architect: A2A Travel Orchestration
 
 **The Future of Agentic AI is Here.**
