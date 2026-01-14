@@ -24,6 +24,10 @@ EXPOSE 7860
 # Set up a new user named "user" with user ID 1000
 RUN useradd -m -u 1000 user
 
+# Create directories that need write access and set ownership
+RUN mkdir -p /app/artifacts /app/uploads && \
+    chown -R user:user /app
+
 # Switch to the "user" user
 USER user
 
