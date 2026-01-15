@@ -1,13 +1,12 @@
 ---
 title: DreamTrip Architect
-emoji: ✈️
 colorFrom: blue
 colorTo: indigo
 sdk: docker
 pinned: false
 ---
 
-# ✈️ DreamTrip Architect: A2A Travel Orchestration
+# DreamTrip Architect: A2A Travel Orchestration
 
 **The Future of Agentic AI is Here.**
 
@@ -17,38 +16,38 @@ Built on the **Agent-to-Agent (A2A) Protocol**, this platform demonstrates the p
 
 ---
 
-## 🚀 Key Technologies & Buzzwords
+## Key Technologies & Buzzwords
 
-*   **⚡ Agentic Orchestration**: Autonomous coordination between disparate AI agents.
-*   **🤖 Multi-Framework Interop**: Unifies **LangChain** (Data Ingestion), **CrewAI** (Sequential Debate), and **AutoGen** (Code-Based Visualization).
-*   **🔗 A2A JSON-RPC Protocol**: Standardized, high-performance communication layer.
-*   **🧠 Cognitive Negotiation**: "Budget Watchdog" vs "Experience Guru" agents debate dynamically to find optimal trade-offs.
-*   **🎨 Glassmorphism UI**: Beautiful, narrative-driven interface built with heavily customized **Streamlit**.
-*   **🐳 Dockerized Deployment**: Container-native architecture ready for **Hugging Face Spaces**.
-*   **🌐 Euri / OpenAI Agnostic**: Seamlessly supports **Euron API** (`EUR_API_KEY`) and standard OpenAI models.
+*   **Agentic Orchestration**: Autonomous coordination between disparate AI agents.
+*   **Multi-Framework Interop**: Unifies **LangChain** (Data Ingestion), **CrewAI** (Sequential Debate), and **AutoGen** (Code-Based Visualization).
+*   **A2A JSON-RPC Protocol**: Standardized, high-performance communication layer.
+*   **Cognitive Negotiation**: "Budget Watchdog" vs "Experience Guru" agents debate dynamically to find optimal trade-offs.
+*   **Glassmorphism UI**: Beautiful, narrative-driven interface built with heavily customized **Streamlit**.
+*   **Dockerized Deployment**: Container-native architecture ready for **Hugging Face Spaces**.
+*   **Euri / OpenAI Agnostic**: Seamlessly supports **Euron API** (`EUR_API_KEY`) and standard OpenAI models.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
-1.  **🕵️ Travel Concierge (LangChain)**
+1.  **Travel Concierge (LangChain)**
     *   Ingests raw CSV data (RAG-lite).
     *   Performs semantic filtering and validates travel feasibility.
     *   Output: Structured travel candidates.
 
-2.  **⚖️ Planning Committee (CrewAI)**
+2.  **Planning Committee (CrewAI)**
     *   **Agent 1 (Watchdog)**: Minimizes cost, enforces frugality.
     *   **Agent 2 (Guru)**: Maximizes experience, upgrades lifestyle.
     *   *Result*: A perfectly balanced, negotiated itinerary.
 
-3.  **🎨 Itinerary Artist (AutoGen)**
+3.  **Itinerary Artist (AutoGen)**
     *   Code-executing agent.
     *   Generates **Plotly** visualizations on the fly for cost breakdowns.
     *   Writes physical artifacts (`.json` charts) to disk.
 
 ---
 
-## 🛠️ Quick Start
+## Quick Start
 
 ### 1. Installation
 Clone the repo and ensure you have `python 3.10+` or `uv`.
@@ -78,7 +77,7 @@ One script to rule them all. Kills zombie processes, installs deps, and launches
 
 ---
 
-## 🚢 Deployment (Docker)
+## Deployment (Docker)
 
 Ready for the cloud? Deploy to **Hugging Face Spaces** (free tier compatible).
 
