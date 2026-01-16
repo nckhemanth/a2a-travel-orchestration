@@ -10,7 +10,7 @@ def run_test():
         {"name": "Itinerary Artist", "url": "http://localhost:8003/a2a"},
     ]
 
-    print("🔍 Testing Agent Connectivity...")
+    print("Testing Agent Connectivity...")
     
     for agent in agents:
         payload = {
@@ -25,16 +25,16 @@ def run_test():
                 data = response.json()
                 if "error" in data:
                     # Method not found means JSON-RPC server IS running and parsing!
-                    print(f"✅ {agent['name']} is ONLINE (JSON-RPC Active).")
+                    print(f"{agent['name']} is ONLINE (JSON-RPC Active).")
                 else:
-                    print(f"✅ {agent['name']} is ONLINE (Card Received).")
+                    print(f"{agent['name']} is ONLINE (Card Received).")
             else:
-                 print(f"⚠️ {agent['name']} returned HTTP {response.status_code}.")
+                 print(f"{agent['name']} returned HTTP {response.status_code}.")
                 
         except Exception as e:
-            print(f"❌ {agent['name']} is OFFLINE. ({e})")
+            print(f"{agent['name']} is OFFLINE. ({e})")
 
-    print("\n🚀 Verification Complete. Run ./setup_and_run.sh to start the UI!")
+    print("\nVerification Complete. Run ./setup_and_run.sh to start the UI!")
 
 if __name__ == "__main__":
     time.sleep(2)
