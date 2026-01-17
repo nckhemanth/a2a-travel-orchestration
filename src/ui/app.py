@@ -18,7 +18,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.orchestrator import orchestrate_trip_planning
 
-# --- 🎨 THEME & STYLING ---
+# --- THEME & STYLING ---
 def inject_custom_css():
     st.markdown("""
         <style>
@@ -203,7 +203,7 @@ def inject_custom_css():
         </style>
     """, unsafe_allow_html=True)
 
-# --- 🛠️ HELPER FUNCTIONS ---
+# --- HELPER FUNCTIONS ---
 
 def _render_hero():
     st.markdown("""
@@ -219,7 +219,7 @@ def _render_feature_cards():
     with c1:
         st.markdown("""
         <div class="feature-card">
-            <div class="icon">🕵️</div>
+            <div class="icon"></div>
             <h4>Concierge</h4>
             <p>Scours the database for hidden gems and validates flight availability against real-world constraints.</p>
         </div>
@@ -235,7 +235,7 @@ def _render_feature_cards():
     with c3:
         st.markdown("""
         <div class="feature-card">
-            <div class="icon">🎨</div>
+            <div class="icon"></div>
             <h4>Artist</h4>
             <p>Visualizes your spend breakdown and generates the final client-ready manifesto.</p>
         </div>
@@ -272,15 +272,15 @@ def _render_plot(artifact: dict[str, Any]) -> None:
 def _render_itinerary_card(itinerary_text: str):
     st.markdown(f"""
     <div style="background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid #E2E8F0;">
-        <h3 style="margin-top:0; border-bottom: 2px solid #D4AF37; padding-bottom: 1rem; margin-bottom: 2rem; text-align: center;">✨ Approved Itinerary</h3>
+        <h3 style="margin-top:0; border-bottom: 2px solid #D4AF37; padding-bottom: 1rem; margin-bottom: 2rem; text-align: center;">Approved Itinerary</h3>
     </div>
     """, unsafe_allow_html=True)
     st.markdown(itinerary_text)
 
-# --- 🚀 MAIN APP ---
+# --- MAIN APP ---
 
 def main() -> None:
-    st.set_page_config(page_title="DreamTrip Architect", layout="wide", page_icon="✈️")
+    st.set_page_config(page_title="DreamTrip Architect", layout="wide")
     inject_custom_css()
     _render_hero()
 
@@ -290,16 +290,16 @@ def main() -> None:
     with st.expander("⚙️ The Engine Room (Configuration)", expanded=False):
         # Safety Lock: Prevent accidental edits - PERMANENTLY LOCKED for Client
         # enable_editing = st.checkbox("🔓 Enable Advanced Configuration", value=False)
-        st.caption("🔒 Configuration is locked by administrator.")
+        st.caption("Configuration is locked by administrator.")
         
         col_conf1, col_conf2 = st.columns(2)
         with col_conf1:
-            st.markdown("**🤖 Model Configuration**")
+            st.markdown("**Model Configuration**")
             langchain_model = st.text_input("Concierge Model", value="gpt-4o-mini", disabled=True)
             crewai_model = st.text_input("Committee Model", value="gpt-4o-mini", disabled=True)
             autogen_model = st.text_input("Artist Model", value="gpt-4o", disabled=True)
         with col_conf2:
-            st.markdown("**🔗 Agent Endpoints**")
+            st.markdown("**Agent Endpoints**")
             reader_endpoint = st.text_input("Reader URL", value="http://localhost:8001/a2a", disabled=True)
             analyst_endpoint = st.text_input("Analyst URL", value="http://localhost:8002/a2a", disabled=True)
             visualizer_endpoint = st.text_input("Visualizer URL", value="http://localhost:8003/a2a", disabled=True)
@@ -319,8 +319,8 @@ def main() -> None:
             dataset_path = default_dataset
             # Show visible preview
             df = pd.read_csv(default_dataset)
-            st.success(f"✅ Loaded verified database with {len(df)} options.")
-            with st.expander("👀 View Travel Database (Preview)", expanded=True):
+            st.success(f"Loaded verified database with {len(df)} options.")
+            with st.expander("View Travel Database (Preview)", expanded=True):
                 st.dataframe(df, use_container_width=True)
         else:
             st.error("Default dataset missing.")
@@ -330,7 +330,7 @@ def main() -> None:
             dataset_path = _persist_upload(uploaded)
             df = pd.read_csv(dataset_path)
             st.success("Custom dataset loaded.")
-            with st.expander("👀 View Uploaded Data", expanded=True):
+            with st.expander("View Uploaded Data", expanded=True):
                 st.dataframe(df, use_container_width=True)
 
     # --- EXECUTION ---
@@ -349,7 +349,7 @@ def main() -> None:
     with status_placeholder.container():
         st.markdown("""
             <div style="background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E3A8A; padding: 1rem; border-radius: 8px; text-align: center; font-weight: 500;">
-                🛫 Initiating Flight Protocol... Waking up Agents...
+                Initiating Flight Protocol... Waking up Agents...
             </div>
         """, unsafe_allow_html=True)
 
@@ -359,13 +359,13 @@ def main() -> None:
             if step == "concierge":
                 status_placeholder.markdown("""
                     <div style="background: #ECFDF5; border: 1px solid #A7F3D0; color: #064E3B; padding: 1rem; border-radius: 8px; text-align: center; font-weight: 500;">
-                        ✅ <b>Concierge</b> has identified top candidates. Sending to Committee...
+                        <b>Concierge</b> has identified top candidates. Sending to Committee...
                     </div>
                 """, unsafe_allow_html=True)
             elif step == "committee":
                 status_placeholder.markdown("""
                     <div style="background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 1rem; border-radius: 8px; text-align: center; font-weight: 500;">
-                        ⚖️ <b>Committee</b> consensus reached! Budget vs Luxury debate concluded.
+                        <b>Committee</b> consensus reached! Budget vs Luxury debate concluded.
                     </div>
                 """, unsafe_allow_html=True)
             elif step == "artist":
@@ -388,7 +388,7 @@ def main() -> None:
     st.markdown("---")
     
     # Tabbed Interface for the Results
-    tab_overview, tab_debate, tab_charts, tab_logs = st.tabs(["✨ Itinerary", "🔥 The Debate", "📊 Financials", "📜 System Logs"])
+    tab_overview, tab_debate, tab_charts, tab_logs = st.tabs(["Itinerary", "The Debate", "Financials", "System Logs"])
 
     with tab_overview:
         col_itinerary, col_summary = st.columns([1.5, 1])
@@ -397,7 +397,7 @@ def main() -> None:
             _render_itinerary_card(results["committee"]["itinerary"])
         
         with col_summary:
-            st.markdown("### 💰 Trip Summary")
+            st.markdown("### Trip Summary")
             
             # Metrics Row
             json_data = results["committee"].get("structured") or {}
@@ -411,9 +411,9 @@ def main() -> None:
                 
             st.markdown("#### Selected Options")
             if json_data:
-                st.info(f"✈️ **Flight:** {json_data.get('selected_flight', 'N/A')}")
-                st.success(f"🏨 **Hotel:** {json_data.get('selected_hotel', 'N/A')}")
-                st.warning(f"🎟️ **Activities:** {', '.join(json_data.get('selected_activities', []))}")
+                st.info(f"**Flight:** {json_data.get('selected_flight', 'N/A')}")
+                st.success(f"**Hotel:** {json_data.get('selected_hotel', 'N/A')}")
+                st.warning(f"**Activities:** {', '.join(json_data.get('selected_activities', []))}")
             else:
                 st.write("Parsing structured data failed. See itinerary text.")
 
@@ -433,16 +433,16 @@ def main() -> None:
             text = msg["text"]
             
             # Determine Avatar/Color
-            avatar_initial = "🤖"
+            avatar_initial = ""
             css_class = ""
             if "Concierge" in speaker:
-                avatar_initial = "🕵️"
+                avatar_initial = ""
                 css_class = "avatar-concierge"
             elif "Committee" in speaker:
-                avatar_initial = "⚖️"
+                avatar_initial = ""
                 css_class = "avatar-watcher" # Default to watcher color for committee wrapper
             elif "Artist" in speaker:
-                avatar_initial = "🎨"
+                avatar_initial = ""
                 css_class = "avatar-artist"
             
             # Render Bubble
@@ -457,7 +457,7 @@ def main() -> None:
             """, unsafe_allow_html=True)
 
     with tab_charts:
-        st.subheader("📊 Financial Visualization")
+        st.subheader("Financial Visualization")
         col_chart1, col_chart2 = st.columns(2)
         
         tool_outputs = results["artist"].get("tool_outputs", [])
