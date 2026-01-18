@@ -25,8 +25,10 @@ EXPOSE 7860
 RUN useradd -m -u 1000 user
 
 # Create directories that need write access and set ownership
-RUN mkdir -p /app/artifacts /app/uploads && \
-    chown -R user:user /app
+# Do this before switching user to ensure proper ownership
+RUN mkdir -p /app/artifacts /app/uploads /app/artifacts/autogen && \
+    chown -R user:user /app && \
+    chmod -R 755 /app/artifacts /app/uploads
 
 # Switch to the "user" user
 USER user

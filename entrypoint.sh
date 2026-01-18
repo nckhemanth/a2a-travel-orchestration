@@ -3,7 +3,15 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+# Ensure we're in the right directory
+cd /app || exit 1
+
 echo "Starting A2A Travel Orchestration in Docker..."
+
+# Create directories with proper permissions (as the user)
+# Use relative paths since we're in /app
+mkdir -p artifacts/autogen uploads
+chmod -R 755 artifacts uploads
 
 # Start the agent orchestrator/server manager in the background
 # This script spawns the 3 fastAPI servers (Reader, Analyst, Visualizer)
