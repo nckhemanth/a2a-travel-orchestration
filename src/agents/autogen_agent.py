@@ -18,8 +18,30 @@ from src.a2a_utils import create_agent_message
 
 
 def _ensure_output_dir(path: str | Path) -> Path:
+    import os
     directory = Path(path)
-    directory.mkdir(parents=True, exist_ok=True)
+    if not directory.is_absolute():
+        # Default to /app in Docker environment
+        if Path("/app").exists():
+            directory = Path("/app") / directory
+        else:
+            # Fall back to current working directory
+            directory = Path.cwd() / directory
+    directory = directory.resolve()
+    
+    # Create directory with proper error handling
+    try:
+        directory.mkdir(parents=True, exist_ok=True)
+        # Verify we can write to it
+        test_file = directory / ".write_test"
+        try:
+            test_file.touch()
+            test_file.unlink()
+        except (PermissionError, OSError) as e:
+            raise PermissionError(f"Cannot write to directory: {directory}: {e}")
+    except (PermissionError, OSError) as e:
+        raise PermissionError(f"Failed to create or access directory {directory}: {e}")
+    
     return directory
 
 
