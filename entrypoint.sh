@@ -8,17 +8,9 @@ cd /app || exit 1
 
 echo "Starting A2A Travel Orchestration in Docker..."
 
-# Create directories with proper permissions (as the user)
-# Use absolute paths to be explicit
-mkdir -p /app/artifacts/autogen /app/uploads
-chmod -R 755 /app/artifacts /app/uploads
-
-# Verify directories exist and are writable
-if [ ! -w /app/artifacts ]; then
-    echo "ERROR: /app/artifacts is not writable!"
-    ls -la /app/ | head -20
-    exit 1
-fi
+# Create uploads directory (artifacts will use /tmp which is always writable)
+mkdir -p /app/uploads
+chmod -R 755 /app/uploads
 
 # Start the agent orchestrator/server manager in the background
 # This script spawns the 3 fastAPI servers (Reader, Analyst, Visualizer)

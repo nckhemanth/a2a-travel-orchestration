@@ -159,7 +159,7 @@ class VisualizerRequestHandler(SimpleRequestHandler):
             )
         
         final_itinerary = payload.get('final_itinerary')
-        output_dir = payload.get('artifacts_dir', 'artifacts/autogen')
+        output_dir = payload.get('artifacts_dir', '/tmp/artifacts/autogen')
         llm_model = payload.get('model', self.llm_model)
 
         if not travel_options or final_itinerary is None:

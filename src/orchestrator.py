@@ -77,29 +77,9 @@ def orchestrate_trip_planning(
     if model_overrides:
         default_models.update(model_overrides)
 
-    # Ensure artifacts directory is absolute and exists with proper permissions
-    artifacts_root = Path(output_dir)
-    if not artifacts_root.is_absolute():
-        # Default to /app/artifacts in Docker environment
-        if Path("/app").exists():
-            artifacts_root = Path("/app") / artifacts_root
-        else:
-            # Fall back to current working directory
-            artifacts_root = Path.cwd() / artifacts_root
-    artifacts_root = artifacts_root.resolve()
-    
-    # Create directory with proper error handling and permission check
-    try:
-        artifacts_root.mkdir(parents=True, exist_ok=True)
-        # Verify we can write to it by creating a test file
-        test_file = artifacts_root / ".write_test"
-        try:
-            test_file.touch()
-            test_file.unlink()
-        except (PermissionError, OSError) as e:
-            raise PermissionError(f"Cannot write to artifacts directory {artifacts_root}: {e}. Current working directory: {os.getcwd()}, User: {os.getuid()}")
-    except (PermissionError, OSError) as e:
-        raise PermissionError(f"Failed to create or access artifacts directory at {artifacts_root}: {e}. Current working directory: {os.getcwd()}")
+    # Use /tmp for artifacts - it's always writable
+    artifacts_root = Path(os.environ.get("ARTIFACTS_DIR", "/tmp/artifacts"))
+    artifacts_root.mkdir(parents=True, exist_ok=True)
 
     dataset_df = pd.read_csv(path)
     dataset_csv = dataset_df.to_csv(index=False)
