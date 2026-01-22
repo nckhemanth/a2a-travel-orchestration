@@ -1,0 +1,14 @@
+digraph DreamTripSequence {
+  graph [rankdir=TB, bgcolor="white", pad=0.3, nodesep=0.4, ranksep=0.5, fontname="Helvetica", label="DreamTrip — End-to-End Agent Sequence", labelloc=t, fontsize=21];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10, color="#334155", fillcolor="#f8fafc", margin="0.16,0.1"];
+  edge [fontname="Helvetica", fontsize=9, color="#475569", penwidth=1.3];
+  request [label="1  Traveler starts a plan in Streamlit", fillcolor="#dbeafe"];
+  load [label="2  Coordinator loads travel_options.csv"];
+  concierge [label="3  A2A → LangChain Concierge filters and summarizes"];
+  committee [label="4  A2A → CrewAI Committee debates budget vs experience"];
+  consensus [label="5  Committee returns narrative + structured itinerary", fillcolor="#dcfce7"];
+  artist [label="6  A2A → AutoGen Artist invokes Plotly tools"];
+  artifacts [label="7  Artist writes cost visualization artifacts"];
+  result [label="8  Coordinator returns transcript, itinerary, and charts", fillcolor="#dcfce7"];
+  request -> load -> concierge -> committee -> consensus -> artist -> artifacts -> result;
+}

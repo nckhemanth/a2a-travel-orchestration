@@ -1,0 +1,27 @@
+digraph DreamTripArchitecture {
+  graph [rankdir=LR, bgcolor="white", pad=0.35, nodesep=0.55, ranksep=0.85, fontname="Helvetica", label="DreamTrip — A2A Multi-Agent Architecture", labelloc=t, fontsize=22];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, color="#334155", penwidth=1.4, margin="0.18,0.12"];
+  edge [fontname="Helvetica", fontsize=9, color="#475569", penwidth=1.4];
+  traveler [label="Traveler", fillcolor="#e0f2fe"];
+  ui [label="Streamlit UI\nrequest · progress · results", fillcolor="#dbeafe"];
+  coordinator [label="Python Coordinator\npandas · httpx · A2A client", fillcolor="#fef3c7"];
+  csv [label="Travel Options CSV", shape=cylinder, fillcolor="#cffafe"];
+  subgraph cluster_agents {
+    label="Independent A2A JSON-RPC Agents"; color="#c4b5fd"; style="rounded,filled"; fillcolor="#f5f3ff";
+    concierge [label="Travel Concierge :8001\nLangChain\nfilter + metrics", fillcolor="#ffffff"];
+    committee [label="Planning Committee :8002\nCrewAI\nBudget vs Experience", fillcolor="#ffffff"];
+    artist [label="Itinerary Artist :8003\nAutoGen + Plotly\nvisual artifacts", fillcolor="#ffffff"];
+  }
+  artifacts [label="Artifact Store\nPlotly JSON charts", shape=cylinder, fillcolor="#dcfce7"];
+  llm [label="Euri / OpenAI-compatible Models", fillcolor="#fae8ff"];
+  traveler -> ui -> coordinator;
+  csv -> coordinator [label="pandas read"];
+  coordinator -> concierge [label="1  options request"];
+  concierge -> committee [label="2  candidates + summary"];
+  committee -> artist [label="3  consensus itinerary"];
+  artist -> artifacts [label="write charts"];
+  concierge -> llm [style=dashed];
+  committee -> llm [style=dashed];
+  artist -> llm [style=dashed];
+  coordinator -> ui [label="4  transcript + result", constraint=false];
+}
