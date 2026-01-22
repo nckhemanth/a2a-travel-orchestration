@@ -30,6 +30,8 @@ Built on the **Agent-to-Agent (A2A) Protocol**, this platform demonstrates the p
 
 ## Architecture
 
+For a concise visual map, protocol boundaries, failure behavior, and the end-to-end planning sequence, see the [architecture package](architecture/README.md).
+
 1.  **Travel Concierge (LangChain)**
     *   Ingests raw CSV data (RAG-lite).
     *   Performs semantic filtering and validates travel feasibility.
