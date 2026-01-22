@@ -77,9 +77,33 @@ def orchestrate_trip_planning(
     if model_overrides:
         default_models.update(model_overrides)
 
-    # Use /tmp for artifacts - it's always writable
-    artifacts_root = Path(os.environ.get("ARTIFACTS_DIR", "/tmp/artifacts"))
-    artifacts_root.mkdir(parents=True, exist_ok=True)
+    # Try multiple locations for artifacts directory
+    # Priority: 1) Environment variable, 2) /tmp, 3) user home, 4) /app
+    artifacts_root = None
+    candidates = [
+        os.environ.get("ARTIFACTS_DIR"),
+        "/tmp/artifacts",
+        str(Path.home() / "artifacts"),
+        "/app/artifacts",
+    ]
+    
+    for candidate in candidates:
+        if not candidate:
+            continue
+        try:
+            candidate_path = Path(candidate)
+            candidate_path.mkdir(parents=True, exist_ok=True)
+            # Test write access
+            test_file = candidate_path / ".write_test"
+            test_file.touch()
+            test_file.unlink()
+            artifacts_root = candidate_path
+            break
+        except (PermissionError, OSError):
+            continue
+    
+    if artifacts_root is None:
+        raise RuntimeError("Could not find a writable directory for artifacts. Tried: " + ", ".join(candidates))
 
     dataset_df = pd.read_csv(path)
     dataset_csv = dataset_df.to_csv(index=False)

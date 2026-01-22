@@ -19,13 +19,31 @@ from src.a2a_utils import create_agent_message
 
 def _ensure_output_dir(path: str | Path) -> Path:
     import os
-    # Use /tmp for artifacts - it's always writable
-    # If path is relative, use it as subdirectory of /tmp
+    # Try multiple locations for output directory
     directory = Path(path)
     if not directory.is_absolute():
-        directory = Path("/tmp") / directory
-    directory.mkdir(parents=True, exist_ok=True)
-    return directory
+        # Try /tmp first, then user home, then /app
+        candidates = [
+            Path("/tmp") / directory,
+            Path.home() / directory,
+            Path("/app") / directory,
+        ]
+    else:
+        candidates = [directory]
+    
+    for candidate in candidates:
+        try:
+            candidate.mkdir(parents=True, exist_ok=True)
+            # Test write access
+            test_file = candidate / ".write_test"
+            test_file.touch()
+            test_file.unlink()
+            return candidate
+        except (PermissionError, OSError):
+            continue
+    
+    # If all failed, raise error with the original path
+    raise PermissionError(f"Cannot create or write to directory: {path}")
 
 
 def _run_coro(task: Awaitable[Any]) -> Any:
